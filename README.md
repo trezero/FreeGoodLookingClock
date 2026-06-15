@@ -1,75 +1,130 @@
+<div align="center">
+
+<img src="icons/icon-512.png" width="116" alt="Clock app icon" />
+
 # Clock
 
-A clean, modern desktop clock for Windows 11 — a lightweight, ad-free, fully-local
-alternative to apps like *Alarm Clock HD*. Built as a Progressive Web App (PWA) so it
-installs like a real program, runs in its own window, and works offline.
+**A clean, modern desktop clock for Windows — with a fresh, bright wallpaper every day.**
+Lightweight, ad-free, fully local, and dependency-free.
 
-## Features
+![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6?logo=windows&logoColor=white)
+![Built with](https://img.shields.io/badge/built%20with-HTML%20%C2%B7%20CSS%20%C2%B7%20JS-e34f26)
+![Dependencies](https://img.shields.io/badge/dependencies-none-2ea44f)
+![No ads](https://img.shields.io/badge/ads%20%C2%B7%20tracking-none-2ea44f)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-- Big, thin, modern digits (`Segoe UI Variable`)
-- AM/PM and seconds stacked to the right, full date below
-- **12 / 24-hour** toggle
-- **Show / hide seconds**
-- **5 built-in background themes** (cycle with the *Theme* button)
-- **Use your own photo** as the background (*Photo* button) — saved locally
-- **Fullscreen** (button, double-click anywhere, or press `F`)
-- Controls auto-hide after a couple seconds of no mouse movement
-- Settings persist between launches; no internet, accounts, ads, or telemetry
+<br/>
 
-## Run it (recommended: the desktop shortcut)
+<img src="assets/screenshot.png" width="760" alt="The clock showing a frosted card with white digits over a bright daily photo" />
 
-Double-click the **Clock** shortcut on the Desktop. It opens a chromeless window
-(no tabs / address bar) **always at the same position and size**, then you're done.
+</div>
 
-How it works: [`clock.vbs`](clock.vbs) launches Edge in *app mode* using a dedicated
-Edge profile (`%LOCALAPPDATA%\FreeGoodLookingClock-Edge`). Because the clock has its own
-profile, the `--window-position` / `--window-size` flags are honored on every launch, so
-it never drifts. It also starts the local file server in the background (hidden) so the
-page always loads.
+---
 
-### Move or resize the clock
+A tiny, self-contained desktop clock that looks great and gets out of your way. It opens in
+its own chromeless window, always in the same spot, and shows a crisp time over a fresh
+photo each day — readable on any background thanks to a frosted glass card behind the
+numbers. No ads, no accounts, no telemetry, no install bloat.
 
-Edit the placement block near the top of [`clock.vbs`](clock.vbs):
+> Inspired by the look of apps like *Alarm Clock HD*, rebuilt from scratch as something
+> small you fully own — just HTML, CSS, and JavaScript, with a couple of tiny Windows
+> scripts to launch and update it.
 
-```vbs
-posX = 2343 : posY = 1224     ' top-left corner, in screen pixels
-sizeW = 403 : sizeH = 175     ' width x height
+## ✨ Features
+
+- 🕒 **Elegant, legible face** — thin modern digits, AM/PM and seconds to the side, full date below
+- 🪟 **Frosted glass card** keeps the numbers crisp white over *any* background
+- 🌄 **A new background every day** — auto-downloaded from Bing's photo-of-the-day and
+  auto-picked for brightness & vividness
+- 📌 **Always opens in the same place & size** — pinned via its own Edge profile
+- 🎨 **Themes** — cycle the daily photo and five built-in gradients, or drop in your own photo
+- ⏱️ **12/24-hour** and **show/hide seconds** toggles
+- 🖥️ **Chromeless window** — no tabs, no address bar; double-click or press <kbd>F</kbd> for fullscreen
+- 🔌 **Works offline** and keeps the last photo when there's no internet
+- 🪶 **Zero dependencies** — needs only Microsoft Edge, which ships with Windows
+- 🚫 **Private** — everything runs locally; no ads, accounts, or tracking
+
+## 🚀 Quick start
+
+> **Requirements:** Windows 10/11 with Microsoft Edge. That's it — no Python, Node, or admin rights.
+
+1. **Download** this folder onto your PC (anywhere).
+2. **Double-click `install.bat`.**
+3. Answer three quick questions — where it should sit, launch-at-login, and daily photos.
+
+You'll get a **Clock** shortcut on your Desktop. Open it and you're done. 🎉
+
+<details>
+<summary>Prefer not to install? Just run it.</summary>
+
+Double-click `start.bat` to serve the clock at `http://localhost:8080/` in your normal
+browser, then press <kbd>F</kbd> for fullscreen. (Installing is recommended — it gives you
+the chromeless, fixed-position window.)
+</details>
+
+## ⚙️ Configuration
+
+### Move or resize the window
+Edit **`window.cfg`** — four lines: `X`, `Y`, `Width`, `Height` (screen pixels) — then
+relaunch. Or just re-run `install.bat` and pick a placement preset.
+
+### Daily backgrounds
+A fresh photo lands in `images/today.jpg` automatically:
+
+- **Refreshes** at login, every day at **6:30 AM** (a Windows scheduled task), at local
+  midnight, and whenever you focus the window.
+- **Smart pick** — it scores Bing's last ~8 wallpapers for brightness and color and keeps the most vivid.
+- **Get one now:** `powershell -ExecutionPolicy Bypass -File update-background.ps1 -Force`
+- **Don't want photos?** Click **Theme** to switch to a gradient — it sticks.
+
+### Themes & your own photo
+Use the on-screen controls (move the mouse to reveal them): **Theme** cycles daily-photo →
+gradients, **Photo** loads your own image, plus **12h/24h**, **Sec**, and **Full**.
+
+## 🧠 How it works
+
+No framework, no build step. The clock is a plain web page; a few small scripts make it
+feel like a native app:
+
+| Piece | Role |
+|------|------|
+| **Web app** (`index.html` · `style.css` · `app.js`) | The clock UI and logic |
+| **`server.ps1`** | A ~60-line dependency-free static server on `127.0.0.1:8080` (no Python/Node) |
+| **`clock.vbs`** | Launches Edge in *app mode* in a dedicated profile, so window position & size are pinned every time — and runs with no visible console |
+| **`sw.js`** | Service worker for offline use |
+| **`update-background.ps1`** | Downloads & scores the daily photo |
+
+Because the clock runs in its **own Edge profile**, the `--window-position`/`--window-size`
+flags are honored on every launch — that's the trick that keeps it from ever drifting.
+
+## 📁 Project structure
+
+```
+FreeGoodLookingClock/
+├─ install.bat / install.ps1      ← setup wizard
+├─ uninstall.bat / uninstall.ps1  ← clean removal
+├─ clock.vbs                      ← everyday launcher (chromeless, fixed position)
+├─ window.cfg                     ← window X / Y / W / H
+├─ server.ps1                     ← tiny local server (no dependencies)
+├─ update-background.ps1          ← daily photo downloader + scorer
+├─ index.html · style.css · app.js
+├─ manifest.webmanifest · sw.js   ← PWA metadata + offline cache
+├─ icons/                         ← app icons
+└─ images/today.jpg               ← current background (overwritten daily)
 ```
 
-(The current values were captured from where you had the window. Coordinates can be
-negative or span past one monitor on a multi-monitor desktop.)
+## 🗑️ Uninstall
 
-## Open automatically at login
+**Double-click `uninstall.bat`.** It stops the clock and server, removes the Desktop &
+Startup shortcuts, removes the daily task, and deletes the Edge profile — then leaves the
+folder for you to delete. Run `uninstall.ps1 -DryRun` first to preview, or `-KeepProfile`
+to keep your settings.
 
-Press `Win + R`, type `shell:startup`, Enter, then drop a **copy of the Desktop `Clock`
-shortcut** into that folder. The clock will appear in its fixed spot every time you sign in.
+## 🛠️ Built with
 
-## Alternative: install as a normal app
+Plain **HTML · CSS · JavaScript**, a **PowerShell** micro-server, and a **VBScript**
+launcher. No frameworks, no bundler, no `node_modules`.
 
-`start.bat` serves the clock at `http://localhost:8080/` in your *main* Edge; from there
-you can **⋯ menu → Apps → Install this site as an app**. An installed PWA remembers its
-own window position, but it isn't forced — the desktop-shortcut method above is the one
-that guarantees the exact same spot/size every time.
+## 📄 License
 
-## Customize
-
-Everything is plain HTML/CSS/JS — edit and refresh.
-
-- **Add/replace themes:** edit the `THEMES` array in [`app.js`](app.js). Each entry is any
-  CSS `background-image` value — a gradient, or `url("images/your-photo.jpg")`.
-- **Fonts / sizes / colors:** [`style.css`](style.css). Time size is the `.time`
-  `font-size` (uses `clamp()` to scale with the window); weight is `font-weight: 200`.
-- **Default background tint / overlay darkness:** the `.overlay` rule in `style.css`.
-
-## Files
-
-| File | Purpose |
-|------|---------|
-| `index.html` | Markup |
-| `style.css` | All styling |
-| `app.js` | Clock logic, settings, background switching |
-| `manifest.webmanifest` | PWA metadata (name, icons, standalone window) |
-| `sw.js` | Service worker — offline caching / installability |
-| `icons/` | App icons (`clock.ico` is used by the desktop shortcut) |
-| `clock.vbs` | One-click launcher: chromeless window, fixed position + size |
-| `start.bat` | Serves the clock in your main Edge (for installing / re-caching) |
+[MIT](LICENSE) © 2026 Jason Perr — do whatever you like; attribution appreciated.

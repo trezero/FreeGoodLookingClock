@@ -35,22 +35,29 @@ html, body {
   transition: background-image 0.4s ease;
 }
 
-/* Dark gradient so light text stays readable over photos */
+/* Light vignette only — the frosted card does the heavy lifting for readability,
+   so we keep the photo bright and vivid. */
 .overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.45) 100%),
-    linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.55) 100%);
+  background: radial-gradient(130% 100% at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.22) 100%);
 }
 
 /* ---- Clock ---- */
+/* Frosted card behind the clock — white numbers stay readable over any image */
 .clock {
   position: relative;
   z-index: 1;
   text-align: center;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+  padding: clamp(20px, 3vw, 46px) clamp(30px, 5vw, 76px);
+  border-radius: clamp(20px, 2.6vw, 40px);
+  background: rgba(10, 16, 24, 0.40);
+  backdrop-filter: blur(16px) saturate(125%);
+  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.38);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
 }
 
 .time-row {

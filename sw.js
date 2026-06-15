@@ -1,5 +1,5 @@
 // Simple offline cache for the clock PWA.
-const CACHE = "clock-v2";
+const CACHE = "clock-v3";
 const ASSETS = [
   "./",
   "index.html",
@@ -23,11 +23,25 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Cache-first: the app is fully static, so serve from cache and fall back to network.
-// For navigations, fall back to the cached index.html so the app still opens
-// even when launched at "/" with no server running (fully offline).
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  const url = new URL(e.request.url);
+
+  // Daily photo: network-first so a freshly-downloaded image shows up, but cache
+  // the latest copy so it still appears when offline.
+  if (url.pathname.endsWith("/today.jpg") || url.pathname.endsWith("images/today.jpg")) {
+    e.respondWith(
+      fetch(e.request).then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put("images/today.jpg", copy));
+        return res;
+      }).catch(() => caches.match("images/today.jpg"))
+    );
+    return;
+  }
+
+  // Everything else: cache-first (fully static). Navigations fall back to the
+  // cached index.html so the app still opens with no server running (offline).
   e.respondWith(
     caches.match(e.request).then((hit) => {
       if (hit) return hit;

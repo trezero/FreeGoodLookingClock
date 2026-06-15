@@ -1,0 +1,15 @@
+# Per-machine window position/size (created by install.bat)
+window.cfg
+
+# Daily-generated background (re-fetched on install / first run)
+images/today.jpg
+images/today.txt
+images/.lastupdate
+
+# Editor / agent tooling
+.claude/
+
+# OS cruft
+Thumbs.db
+desktop.ini
+.DS_Store
