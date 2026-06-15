@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1622" />
+  <title>Clock</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="stage" class="stage">
+    <div class="overlay"></div>
+
+    <section class="clock" aria-live="off">
+      <div class="time-row">
+        <span id="time" class="time">--:--</span>
+        <div class="side">
+          <span id="ampm" class="ampm">--</span>
+          <span id="seconds" class="seconds">--</span>
+        </div>
+      </div>
+      <div id="date" class="date">&nbsp;</div>
+    </section>
+
+    <!-- Controls: auto-hide when idle -->
+    <div id="controls" class="controls">
+      <button id="btn-format" class="ctl" title="Toggle 12 / 24 hour">24h</button>
+      <button id="btn-seconds" class="ctl" title="Show / hide seconds">Sec</button>
+      <button id="btn-bg" class="ctl" title="Change background">Theme</button>
+      <label class="ctl" title="Use your own photo">
+        Photo
+        <input id="file-bg" type="file" accept="image/*" hidden />
+      </label>
+      <button id="btn-fullscreen" class="ctl" title="Fullscreen">Full</button>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
