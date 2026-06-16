@@ -13,6 +13,7 @@ const el = {
   btnBg: document.getElementById("btn-bg"),
   btnFullscreen: document.getElementById("btn-fullscreen"),
   fileBg: document.getElementById("file-bg"),
+  btnGear: document.getElementById("btn-gear"),
 };
 
 // ---- Settings (persisted) ----
@@ -159,19 +160,25 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-// ---- Auto-hide controls ----
-let hideTimer = null;
-function showControls() {
-  document.body.classList.add("show-controls");
-  document.body.style.cursor = "default";
-  clearTimeout(hideTimer);
-  hideTimer = setTimeout(() => {
-    document.body.classList.remove("show-controls");
-    document.body.style.cursor = "none";
-  }, 2500);
+// ---- Gear icon toggle ----
+function toggleControls() {
+  const open = document.body.classList.toggle("show-controls");
+  el.btnGear.classList.toggle("active", open);
 }
-document.addEventListener("mousemove", showControls);
-document.addEventListener("touchstart", showControls, { passive: true });
+
+el.btnGear.addEventListener("click", (e) => {
+  e.stopPropagation();
+  toggleControls();
+});
+
+document.addEventListener("click", (e) => {
+  if (document.body.classList.contains("show-controls") &&
+      !el.controls.contains(e.target) &&
+      e.target !== el.btnGear) {
+    document.body.classList.remove("show-controls");
+    el.btnGear.classList.remove("active");
+  }
+});
 
 // ---- Service worker (offline / installable) ----
 if ("serviceWorker" in navigator) {
@@ -182,7 +189,6 @@ if ("serviceWorker" in navigator) {
 applyBackground();
 syncButtons();
 startClock();
-showControls();
 // A new day's image may still be downloading at launch — re-check shortly after.
 setTimeout(() => {
   if (!settings.customBg && settings.bgIndex === 0) applyBackground(String(Date.now()));
